@@ -20,3 +20,5 @@ create table usuarios(
     senha varchar(50) not null,
     criadoEm timestamp default current_timestamp()
 ) ENGINE = INNODB;
+
+alter table usuarios modify senha varchar(100) not null;
