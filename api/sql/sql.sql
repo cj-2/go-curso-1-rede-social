@@ -11,6 +11,7 @@ create database if not exists devbook;
 use devbook;
 
 drop table if exists usuarios;
+drop table if exists seguidores;
 
 create table usuarios(
     id int auto_increment primary key,
@@ -22,3 +23,17 @@ create table usuarios(
 ) ENGINE = INNODB;
 
 alter table usuarios modify senha varchar(100) not null;
+
+create table seguidores(
+    usuario_id int not null,
+    foreign key (usuario_id) 
+    references usuarios(id) 
+    on delete cascade,
+    
+    seguidor_id int not null,
+    foreign key (seguidor_id) 
+    references usuarios(id) 
+    on delete cascade,
+
+    primary key (usuario_id, seguidor_id)
+) ENGINE = INNODB;
