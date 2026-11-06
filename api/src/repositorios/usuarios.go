@@ -139,3 +139,17 @@ func (repositorio Usuarios) Apagar(id uint64) error {
 
 	return nil
 }
+
+func (repositorio Usuarios) Seguir(seguidorId uint64, usuarioId uint64) error {
+	statement, erro := repositorio.db.Prepare("insert ignore into seguidores (seguidor_id, usuario_id) values (?, ?)")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro := statement.Exec(seguidorId, usuarioId); erro != nil {
+		return erro
+	}
+
+	return nil
+}
