@@ -200,3 +200,36 @@ func (repositorio Usuarios) BuscarSeguidores(usuarioId uint64) ([]modelos.Usuari
 
 	return seguidores, nil
 }
+
+func (repositorio Usuarios) BuscarSeguindo(usuarioId uint64) ([]modelos.Usuario, error) {
+	linhas, erro := repositorio.db.Query(`
+		select u.id, u.nome, u.nick, u.email, u.criadoEm
+		from usuarios u inner join seguidores s on u.id = s.usuario_id
+		where s.seguidor_id = ?
+	`, usuarioId)
+
+	if erro != nil {
+		return nil, erro
+	}
+	defer linhas.Close()
+
+	var seguidores []modelos.Usuario
+
+	for linhas.Next() {
+		var seguidor modelos.Usuario
+
+		if erro = linhas.Scan(
+			&seguidor.Id,
+			&seguidor.Nome,
+			&seguidor.Nick,
+			&seguidor.Email,
+			&seguidor.CriadoEm,
+		); erro != nil {
+			return nil, erro
+		}
+
+		seguidores = append(seguidores, seguidor)
+	}
+
+	return seguidores, nil
+}
